@@ -1,0 +1,7 @@
+{
+  "name": "receta-app-v3",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
