@@ -1,0 +1,14 @@
+<ion-toolbar>
+  <!-- Avatar a la izquierda -->
+  <ion-avatar slot="start">
+    <img src="assets/img/logoapp.png" alt="Logo App" />
+  </ion-avatar>
+
+  <!-- Botón de login a la derecha -->
+  <ion-buttons slot="end">
+    <ion-tab-button [routerLink]="['/auth/login']">
+      <ion-icon name="log-in-outline"></ion-icon>
+    </ion-tab-button>
+    <ion-button (click)="logout()">cerrara sesion</ion-button>
+  </ion-buttons>
+</ion-toolbar>

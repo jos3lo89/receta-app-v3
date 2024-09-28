@@ -1,0 +1,7 @@
+.home-content {
+  scrollbar-width: none; /* Para Firefox */
+  -ms-overflow-style: none; /* Para Internet Explorer y Edge */
+}
+.home-content::-webkit-scrollbar {
+  display: none; /* Para Chrome, Safari y Opera */
+}
