@@ -21,7 +21,7 @@ export const routes: Routes = [
   {
     canActivateChild: [privateGuard()],
     path: 'user',
-    // loadComponent: () => import('./layout/layout.component'),
+    loadComponent: () => import('./layout/userLayout.component'),
     loadChildren: () => import('./user/user.routes'),
   },
   {

@@ -1,0 +1,32 @@
+.profile-title {
+  text-align: center;
+}
+
+.spinner-box {
+  display: flex;
+  justify-content: center;
+  align-items: centers;
+  margin-top: 50px;
+}
+.datos-box {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+
+}
+
+img {
+border-radius: 15px;
+}
+
+p {
+    font-size: 14px;
+    color: orange;
+    text-transform: capitalize;
+}
+
+p span {
+    color: white;
+}

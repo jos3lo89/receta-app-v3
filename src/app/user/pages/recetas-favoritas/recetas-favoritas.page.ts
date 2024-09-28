@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -9,9 +9,9 @@ import {
 } from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.page.html',
-  styleUrls: ['./home.page.scss'],
+  selector: 'app-recetas-favoritas',
+  templateUrl: './recetas-favoritas.page.html',
+  styleUrls: ['./recetas-favoritas.page.scss'],
   standalone: true,
   imports: [
     IonContent,
@@ -22,7 +22,7 @@ import {
     FormsModule,
   ],
 })
-export default class HomePage implements OnInit {
+export default class RecetasFavoritasPage implements OnInit {
   constructor() {}
 
   ngOnInit() {}

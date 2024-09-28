@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonToolbar,
@@ -9,8 +9,12 @@ import {
   IonButtons,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { logInOutline } from 'ionicons/icons';
+import { logInOutline, logOutOutline } from 'ionicons/icons';
 import { AuthStateService } from 'src/app/shared/auth-state/auth-state.service';
+
+interface UserDataI {
+  email: string | null | undefined;
+}
 
 @Component({
   selector: 'app-header',
@@ -28,14 +32,19 @@ import { AuthStateService } from 'src/app/shared/auth-state/auth-state.service';
   ],
 })
 export class HeaderComponent implements OnInit {
-  private _auhtStateService = inject(AuthStateService);
+  // private _auhtStateService = inject(AuthStateService);
+
   constructor() {
-    addIcons({ logInOutline });
+    addIcons({ logInOutline, logOutOutline });
   }
 
-  logout() {
-    this._auhtStateService.logOut();
-  }
+  // logout() {
+  //   this._auhtStateService.logOut();
+  // }
 
   ngOnInit() {}
+
+  // isAuthenticated() {
+  //   return this._auhtStateService.isAuthenticated();
+  // }
 }

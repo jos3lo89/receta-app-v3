@@ -48,7 +48,6 @@ export class AuthService {
     try {
       const userRef = doc(this._firestore, `users/${userId}`);
       await setDoc(userRef, data);
-      console.log('Datos del usuario guardados correctamente en Firestore');
     } catch (error) {
       console.error('Error al guardar los datos en Firestore:', error);
     }
@@ -60,9 +59,7 @@ export class AuthService {
 
   signInWithGoogle() {
     const googleProvider = new GoogleAuthProvider();
-
     googleProvider.setCustomParameters({ prompt: 'select_account' });
-
     return signInWithPopup(this._auth, googleProvider);
   }
 }

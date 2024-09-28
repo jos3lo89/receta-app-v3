@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
   IonRouterOutlet,
@@ -7,14 +7,17 @@ import {
   IonFooter,
   IonToolbar,
   IonTitle,
+  IonButtons,
+  IonButton,
+  IonBackButton,
 } from '@ionic/angular/standalone';
 import { NavigationComponent } from '../components/navigation/navigation.component';
 import { HeaderComponent } from '../components/header/header.component';
-import { AuthStateService } from '../shared/auth-state/auth-state.service';
+import { NavigationUserComponent } from '../user/components/navigation-user/navigation-user.component';
+import { LogOutComponent } from '../auth/components/log-out/log-out.component';
 
 @Component({
   standalone: true,
-
   imports: [
     RouterModule,
     IonRouterOutlet,
@@ -25,18 +28,29 @@ import { AuthStateService } from '../shared/auth-state/auth-state.service';
     IonTitle,
     NavigationComponent,
     HeaderComponent,
+    IonButton,
+    IonButtons,
+    IonBackButton,
+    NavigationUserComponent,
+    LogOutComponent,
   ],
   selector: 'app-layout',
   template: `
     <ion-header>
-      <app-header  />
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button>atras</ion-back-button>
+        </ion-buttons>
+
+        <app-log-out />
+      </ion-toolbar>
     </ion-header>
     <ion-content>
       <ion-router-outlet />
     </ion-content>
     <ion-footer>
       <ion-toolbar>
-        <app-navigation />
+        <app-navigation-user />
       </ion-toolbar>
     </ion-footer>
   `,
@@ -51,14 +65,4 @@ import { AuthStateService } from '../shared/auth-state/auth-state.service';
     }
   `,
 })
-export default class LayoutComponent implements OnInit {
-
- 
-  constructor() {
-    
-  }
-
-  ngOnInit(): void {
-  }
-
-}
+export default class LayoutComponent {}
