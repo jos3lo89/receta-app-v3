@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonTabBar, IonTabButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { logInOutline, personAddOutline, personOutline } from 'ionicons/icons';
+import { AuthStateService } from 'src/app/shared/auth-state/auth-state.service';
 
 @Component({
   selector: 'app-navigation-user',
@@ -12,6 +13,10 @@ import { logInOutline, personAddOutline, personOutline } from 'ionicons/icons';
   imports: [IonIcon, IonTabButton, IonTabBar, RouterLink],
 })
 export class NavigationUserComponent implements OnInit {
+  private _authStateService = inject(AuthStateService);
+
+  isAdmin = false;
+
   constructor() {
     addIcons({ logInOutline, personAddOutline, personOutline });
   }
@@ -34,5 +39,15 @@ export class NavigationUserComponent implements OnInit {
     },
   ];
 
-  ngOnInit() {}
+  async ngOnInit() {
+    try {
+      const user = await this._authStateService.obtenerDatosUsuario();
+      if (user) {
+        this.isAdmin = true;
+      }
+      console.log('usuario navigation', user);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

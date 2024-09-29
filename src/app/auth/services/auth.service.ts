@@ -6,7 +6,8 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from '@angular/fire/auth';
-import { doc, Firestore, setDoc } from '@angular/fire/firestore';
+import { doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
+import { AuthStoreService } from 'src/app/shared/auth-state/auht-store.service';
 
 export interface User {
   nombre: string;
@@ -21,6 +22,7 @@ export interface User {
 export class AuthService {
   private _auth = inject(Auth);
   private _firestore = inject(Firestore);
+  private _authStore = inject(AuthStoreService);
 
   constructor() {}
 
@@ -53,13 +55,40 @@ export class AuthService {
     }
   }
 
-  loginService(user: Omit<User, 'nombre' | 'rol'>) {
-    return signInWithEmailAndPassword(this._auth, user.email, user.password);
+  async loginService(user: Omit<User, 'nombre' | 'rol'>) {
+    const authUser = await signInWithEmailAndPassword(
+      this._auth,
+      user.email,
+      user.password
+    );
+
+    const userDocRef = doc(this._firestore, `users/${authUser.user.uid}`);
+    const userDocSnapshot = await getDoc(userDocRef);
+
+    const { email, photoURL } = authUser.user;
+    const data = userDocSnapshot.data() as { nombre: string; rol: string };
+
+    const allData = {
+      nombre: data.nombre,
+      rol: data.rol,
+      email,
+      photoURL,
+    };
+
+    this._authStore.setUserData(allData);
+
+    console.log('all data', allData);
+
+    return allData;
   }
 
-  signInWithGoogle() {
+  async signInWithGoogle() {
     const googleProvider = new GoogleAuthProvider();
     googleProvider.setCustomParameters({ prompt: 'select_account' });
-    return signInWithPopup(this._auth, googleProvider);
+    const www = await signInWithPopup(this._auth, googleProvider);
+
+    console.log(www);
+
+    return www;
   }
 }

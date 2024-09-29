@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Auth, authState, getAuth, signOut } from '@angular/fire/auth';
 import { doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { AuthStoreService } from './auht-store.service';
 
 interface USErDat {
   nombre: string;
@@ -14,6 +15,7 @@ interface USErDat {
 export class AuthStateService {
   private _auth = inject(Auth);
   private _firestore = inject(Firestore);
+  private _authStore = inject(AuthStoreService);
 
   get authState$(): Observable<any> {
     return authState(this._auth);
@@ -24,6 +26,7 @@ export class AuthStateService {
   }
 
   async logOut() {
+    this._authStore.clearUserData();
     await signOut(this._auth);
   }
 
