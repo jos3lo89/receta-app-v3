@@ -6,7 +6,14 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
 } from '@ionic/angular/standalone';
+import cData from './data-access/regiones';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +21,11 @@ import {
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+    IonCardContent,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
     IonContent,
     IonHeader,
     IonTitle,
@@ -23,7 +35,18 @@ import {
   ],
 })
 export default class HomePage implements OnInit {
+  private _router = inject(Router);
+  cardData = cData;
   constructor() {}
 
   ngOnInit() {}
+  redirectCard(ruta: string, region: string) {
+    const params: NavigationExtras = {
+      queryParams: {
+        region,
+      },
+    };
+
+    this._router.navigate([ruta], params);
+  }
 }
