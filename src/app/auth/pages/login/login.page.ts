@@ -25,6 +25,7 @@ import {
   IonBackButton,
   IonList,
   IonText,
+  IonSpinner,
 } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { GoogleButtonComponent } from '../../components/google-button/google-button.component';
@@ -43,6 +44,7 @@ interface FormSignUp {
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
+    IonSpinner,
     IonText,
     IonList,
     IonBackButton,
@@ -73,6 +75,9 @@ export default class LoginPage implements OnInit {
   private _formBuild = inject(FormBuilder);
   private _toastService = inject(ToastService);
 
+  isloading = false;
+  isLoadingGoogleBtn = false;
+
   constructor() {}
 
   ngOnInit() {}
@@ -91,10 +96,19 @@ export default class LoginPage implements OnInit {
   }
 
   async login() {
-    if (this.form.invalid) return;
+    this.isloading = true;
+
+    if (this.form.invalid) {
+      this.isloading = false;
+      return;
+    }
+
     const { email, password } = this.form.value;
 
-    if (!email || !password) return;
+    if (!email || !password) {
+      this.isloading = false;
+      return;
+    }
 
     try {
       await this._authService.loginService({
@@ -104,20 +118,26 @@ export default class LoginPage implements OnInit {
 
       this._toastService.getToast('Hola nuevamente', 'top', 'success');
       this._router.navigateByUrl('/pages/home');
+      this.isloading = false;
     } catch (error) {
       this._toastService.getToast('Ocurrio un error', 'top', 'danger');
       console.log(error);
+      this.isloading = false;
     }
   }
 
   async submitWithGoogle() {
+    this.isLoadingGoogleBtn = true;
+
     try {
       await this._authService.signInWithGoogle();
       this._toastService.getToast('Hola nuevamente', 'top', 'success');
       this._router.navigateByUrl('/pages/home');
+      this.isLoadingGoogleBtn = false;
     } catch (error) {
       this._toastService.getToast('Ocurrio un error', 'top', 'danger');
       console.log(error);
+      this.isLoadingGoogleBtn = false;
     }
   }
 }

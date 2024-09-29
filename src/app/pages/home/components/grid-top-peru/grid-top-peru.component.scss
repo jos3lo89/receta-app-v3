@@ -1,0 +1,22 @@
+.horizontal-list {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none; /* Para Firefox */
+    -ms-overflow-style: none; /* Para Internet Explorer y Edge */
+  }
+  
+  .horizontal-list::-webkit-scrollbar {
+    display: none; /* Para Chrome, Safari y Opera */
+  }
+  
+  .horizontal-list ion-item {
+    display: inline-block;
+    width: auto;
+    max-width: 250px;
+  }
+  
+  .text-box {
+    text-align: center;
+  }
+  

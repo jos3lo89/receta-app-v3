@@ -10,17 +10,17 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardSubtitle,
-  IonCardContent,
-} from '@ionic/angular/standalone';
-import cData from './data-access/regiones';
-import { NavigationExtras, Router } from '@angular/router';
+  IonCardContent, IonItem, IonText } from '@ionic/angular/standalone';
+import { GridRegionesComponent } from './components/grid-regiones/grid-regiones.component';
+import { GridTopPeruComponent } from "./components/grid-top-peru/grid-top-peru.component";
+import { GridRecientesComponent } from "./components/grid-recientes/grid-recientes.component";
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonText, IonItem,
     IonCardContent,
     IonCardSubtitle,
     IonCardTitle,
@@ -32,21 +32,10 @@ import { NavigationExtras, Router } from '@angular/router';
     IonToolbar,
     CommonModule,
     FormsModule,
-  ],
+    GridRegionesComponent, GridTopPeruComponent, GridRecientesComponent],
 })
 export default class HomePage implements OnInit {
-  private _router = inject(Router);
-  cardData = cData;
   constructor() {}
 
   ngOnInit() {}
-  redirectCard(ruta: string, region: string) {
-    const params: NavigationExtras = {
-      queryParams: {
-        region,
-      },
-    };
-
-    this._router.navigate([ruta], params);
-  }
 }

@@ -16,6 +16,7 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -38,3 +39,5 @@ bootstrapApplication(AppComponent, {
     provideStorage(() => getStorage()),
   ],
 });
+
+defineCustomElements(window);
