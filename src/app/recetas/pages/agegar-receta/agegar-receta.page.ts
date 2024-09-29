@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormArray,
@@ -20,17 +20,19 @@ import {
   IonInput,
   IonSelectOption,
   IonSelect,
-  IonText,
-} from '@ionic/angular/standalone';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+  IonText, IonIcon } from '@ionic/angular/standalone';
 import { CamaraModalComponent } from './components/camara-modal/camara-modal.component';
+import { RecetasDataService } from '../../service/recetas-data.service';
+import { ToastService } from 'src/app/shared/toast/toast.service';
+import { addIcons } from 'ionicons';
+import { add } from 'ionicons/icons';
 
 @Component({
   selector: 'app-agegar-receta',
   templateUrl: './agegar-receta.page.html',
   styleUrls: ['./agegar-receta.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonIcon, 
     IonText,
     IonInput,
     IonButton,
@@ -54,19 +56,35 @@ export default class AgegarRecetaPage implements OnInit {
   isModalOpen = false;
   capturedImages: string[] = [];
 
-  constructor(private fb: FormBuilder) {
-    this.recipeForm = this.fb.group({
+  private _formBuilder = inject(FormBuilder);
+  private _recetasDataService = inject(RecetasDataService);
+  private _toast = inject(ToastService);
+
+  constructor() {
+
+    addIcons({add})
+
+
+    this.recipeForm = this._formBuilder.group({
       nombre: ['', Validators.required],
       hora: ['', Validators.required],
       minutos: ['', Validators.required],
-      ingredientes: this.fb.array([this.fb.control('')]),
-      preparacion: this.fb.array([this.fb.control('')]),
+      ingredientes: this._formBuilder.array([this._formBuilder.control('')]),
+      preparacion: this._formBuilder.array([this._formBuilder.control('')]),
       region: ['', Validators.required],
       tipo: ['', Validators.required],
       porciones: [1, Validators.required],
-      carbohidratos: ['', Validators.required],
-      energia: ['', Validators.required],
-      imagenes: this.fb.array([]),
+      imagenes: this._formBuilder.array([]),
+      infoNutricional: this._formBuilder.group({
+        carbohidratos: ['', Validators.required],
+        energia: ['', Validators.required],
+        grasas: ['', Validators.required],
+        fibra: ['', Validators.required],
+        proteina: ['', Validators.required],
+        grasasSaturadas: ['', Validators.required],
+        sodio: ['', Validators.required],
+        azucares: ['', Validators.required],
+      }),
     });
   }
   ngOnInit() {}
@@ -83,44 +101,19 @@ export default class AgegarRecetaPage implements OnInit {
     return this.recipeForm.get('imagenes') as FormArray;
   }
 
-  async takeImage() {
-    const dataURl = (await this.takePicture('Imagen de la receta')).dataUrl;
-    console.log(dataURl);
-    // luego guardar en el formulario
-    /*
-    this.form.controls.image.setValue(dataURl)
-
-    */
-  }
-
-  /* CAMARA START */
-
-  async takePicture(promptLabelHeader: string) {
-    return await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Prompt,
-      promptLabelHeader,
-      promptLabelPhoto: 'Seleciona una imagen',
-      promptLabelPicture: 'Toma una foto',
-    });
-  }
-  /* CAMARA END */
-
   addIngrediente() {
-    this.ingredientes.push(this.fb.control(''));
+    this.ingredientes.push(this._formBuilder.control(''));
   }
 
   addPreparacion() {
-    this.preparacion.push(this.fb.control(''));
+    this.preparacion.push(this._formBuilder.control(''));
   }
 
   capturedImage: string | undefined;
 
   handleCapture(imageDataUrl: string) {
     this.capturedImages.push(imageDataUrl);
-    this.imagenes.push(this.fb.control(imageDataUrl));
+    this.imagenes.push(this._formBuilder.control(imageDataUrl));
     this.closeModal();
   }
 
@@ -131,12 +124,41 @@ export default class AgegarRecetaPage implements OnInit {
   closeModal() {
     this.isModalOpen = false;
   }
-  onSubmit() {
+
+  isLoading = false;
+  async onSubmit() {
     if (this.recipeForm.valid) {
-      console.log(this.recipeForm.value);
-      // Aquí puedes agregar la lógica para subir a Firestore
+      this.isLoading = true;
+
+      const success = await this._recetasDataService.subirReceta(
+        this.recipeForm.value
+      );
+
+      if (success) {
+        this._toast.getToast('Receta subida exitosamente', 'middle', 'success');
+        this.resetFrom();
+      } else {
+        this._toast.getToast('Error al subir la receta', 'middle', 'danger');
+      }
+
+      this.isLoading = false;
     } else {
-      console.log('Formulario inválido');
+      this._toast.getToast('Formulario inválido', 'middle', 'warning');
     }
+  }
+
+  clearFormArray(formArray: FormArray) {
+    while (formArray.length !== 0) {
+      formArray.removeAt(0);
+    }
+  }
+
+  resetFrom() {
+    this.recipeForm.reset();
+    this.clearFormArray(this.ingredientes);
+    this.clearFormArray(this.preparacion);
+    this.addIngrediente();
+    this.addPreparacion();
+    this.capturedImages = [];
   }
 }

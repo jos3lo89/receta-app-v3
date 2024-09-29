@@ -33,14 +33,13 @@ export class CamaraModalComponent implements OnInit {
   ngOnInit(): void {}
 
   constructor() {
-    addIcons({ close, camera , image});
+    addIcons({ close, camera, image });
   }
 
   @Input() isOpen = false;
   @Output() closeModalEvent = new EventEmitter<void>();
   @Output() captureEvent = new EventEmitter<string>();
 
-  photoDataUrl: string | undefined;
   CameraSource = CameraSource;
 
   closeModal() {
@@ -55,7 +54,6 @@ export class CamaraModalComponent implements OnInit {
         resultType: CameraResultType.DataUrl,
         source: source,
       });
-      this.photoDataUrl = image.dataUrl;
       this.captureEvent.emit(image.dataUrl);
     } catch (error) {
       console.error('Error al capturar la imagen:', error);
