@@ -77,8 +77,6 @@ export class AuthService {
 
     this._authStore.setUserData(allData);
 
-    console.log('all data', allData);
-
     return allData;
   }
 
@@ -87,7 +85,14 @@ export class AuthService {
     googleProvider.setCustomParameters({ prompt: 'select_account' });
     const www = await signInWithPopup(this._auth, googleProvider);
 
-    console.log(www);
+    const allData = {
+      nombre: www.user.displayName!,
+      rol: 'user',
+      email: www.user.email,
+      photoURL: www.user.photoURL,
+    };
+
+    this._authStore.setUserData(allData);
 
     return www;
   }

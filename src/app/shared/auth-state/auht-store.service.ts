@@ -24,7 +24,7 @@ export class AuthStoreService {
 
   setUserData(user: userStore): void {
     localStorage.setItem(this.localStorageKey, JSON.stringify(user));
-    this.userDataSignal.set(user); // Actualiza el signal
+    this.userDataSignal.set(user);
   }
 
   getUserDataSignal() {
@@ -35,8 +35,12 @@ export class AuthStoreService {
     return signal(() => this.userDataSignal()?.rol || null);
   }
 
+  // getUserRoleSignal() {
+  //   return this.userDataSignal()?.rol || null;
+  // }
+
   clearUserData(): void {
     localStorage.removeItem(this.localStorageKey);
-    this.userDataSignal.set(null); // Limpia el signal
+    this.userDataSignal.set(null);
   }
 }

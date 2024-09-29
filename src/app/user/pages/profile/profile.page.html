@@ -10,9 +10,9 @@
   } @else {
   <div class="datos-box">
     <div>
-      @if (foto) {
+      @if (userDAta.photoURL) {
 
-      <img [src]="foto" alt="Foto de perfil" />
+      <img [src]="userDAta.photoURL" alt="Foto de perfil" />
       }@else {
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -33,11 +33,9 @@
       }
     </div>
     <div>
-      <p>correo electronico: <span>{{email}}</span></p>
-      <p>Nombre: <span>{{ nombre || 'Nombre no disponible' }}</span></p>
-      @if (rol) {
-      <p>rol: <span>{{rol}}</span></p>
-      }
+      <p>correo electronico: <span>{{userDAta.email}}</span></p>
+      <p>Nombre: <span>{{ userDAta.nombre }}</span></p>
+      <p>rol: <span>{{userDAta.rol}}</span></p>
     </div>
   </div>
   }

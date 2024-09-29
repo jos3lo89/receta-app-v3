@@ -1,9 +1,16 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonTabBar, IonTabButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { logInOutline, personAddOutline, personOutline } from 'ionicons/icons';
-import { AuthStateService } from 'src/app/shared/auth-state/auth-state.service';
+import { AuthStoreService } from 'src/app/shared/auth-state/auht-store.service';
+
+interface UserData {
+  email: string;
+  nombre: string;
+  rol: string;
+  photoURL: string | null;
+}
 
 @Component({
   selector: 'app-navigation-user',
@@ -13,41 +20,49 @@ import { AuthStateService } from 'src/app/shared/auth-state/auth-state.service';
   imports: [IonIcon, IonTabButton, IonTabBar, RouterLink],
 })
 export class NavigationUserComponent implements OnInit {
-  private _authStateService = inject(AuthStateService);
-
-  isAdmin = false;
-
-  constructor() {
-    addIcons({ logInOutline, personAddOutline, personOutline });
-  }
+  dataUser = this.authStoreService.getUserDataSignal();
+  userRole?: UserData;
 
   navigationRoutes = [
     {
       path: '/user/receta/add-receta',
       name: 'Agregar Receta',
       icon: 'log-in-outline',
+      restrictedToAdmin: true,
     },
     {
       path: '/user/favorities',
       name: 'Favoritos',
       icon: 'person-add-outline',
+      restrictedToAdmin: false,
     },
     {
       path: '/user/profile',
       name: 'Mi perfil',
       icon: 'person-outline',
+      restrictedToAdmin: false,
     },
   ];
 
-  async ngOnInit() {
-    try {
-      const user = await this._authStateService.obtenerDatosUsuario();
-      if (user) {
-        this.isAdmin = true;
+  constructor(private authStoreService: AuthStoreService) {
+    addIcons({ logInOutline, personAddOutline, personOutline });
+
+    effect(() => {
+      const data = this.dataUser();
+      if (data) {
+        this.userRole = data as UserData;
+        this.updateNavigationRoutes();
       }
-      console.log('usuario navigation', user);
-    } catch (error) {
-      console.log(error);
+    });
+  }
+
+  ngOnInit(): void {}
+
+  updateNavigationRoutes() {
+    if (this.userRole?.rol !== 'admin') {
+      this.navigationRoutes = this.navigationRoutes.filter(
+        (route) => !route.restrictedToAdmin
+      );
     }
   }
 }

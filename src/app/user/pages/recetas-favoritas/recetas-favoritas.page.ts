@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -7,7 +7,6 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { AuthStoreService } from 'src/app/shared/auth-state/auht-store.service';
 
 @Component({
   selector: 'app-recetas-favoritas',
@@ -24,13 +23,7 @@ import { AuthStoreService } from 'src/app/shared/auth-state/auht-store.service';
   ],
 })
 export default class RecetasFavoritasPage implements OnInit {
-  userDataSignal = this.auhtStoreService.getUserDataSignal();
-
-  constructor(private auhtStoreService: AuthStoreService) {
-    effect(() => {
-      console.log('User role is:', this.userDataSignal());
-    });
-  }
+  constructor() {}
 
   ngOnInit() {}
 }

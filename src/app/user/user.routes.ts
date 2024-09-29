@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { userRoleGuard } from './guards/user.guard';
 
 export default [
   {
@@ -6,6 +7,7 @@ export default [
     loadComponent: () => import('./pages/profile/profile.page'),
   },
   {
+    canActivateChild: [userRoleGuard],
     path: 'receta/add-receta',
     loadComponent: () =>
       import('../recetas/pages/agegar-receta/agegar-receta.page'),
