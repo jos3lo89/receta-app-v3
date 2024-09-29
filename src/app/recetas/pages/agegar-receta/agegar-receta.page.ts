@@ -46,11 +46,13 @@ import { CamaraModalComponent } from './components/camara-modal/camara-modal.com
     IonSelectOption,
     ReactiveFormsModule,
     IonSelect,
-    CamaraModalComponent
+    CamaraModalComponent,
   ],
 })
 export default class AgegarRecetaPage implements OnInit {
   recipeForm: FormGroup;
+  isModalOpen = false;
+  capturedImages: string[] = [];
 
   constructor(private fb: FormBuilder) {
     this.recipeForm = this.fb.group({
@@ -64,21 +66,31 @@ export default class AgegarRecetaPage implements OnInit {
       porciones: [1, Validators.required],
       carbohidratos: ['', Validators.required],
       energia: ['', Validators.required],
-      // Otros campos nutricionales también pueden ir aquí...
+      imagenes: this.fb.array([]),
     });
   }
-
   ngOnInit() {}
+
+  get ingredientes() {
+    return this.recipeForm.get('ingredientes') as FormArray;
+  }
+
+  get preparacion() {
+    return this.recipeForm.get('preparacion') as FormArray;
+  }
+
+  get imagenes() {
+    return this.recipeForm.get('imagenes') as FormArray;
+  }
 
   async takeImage() {
     const dataURl = (await this.takePicture('Imagen de la receta')).dataUrl;
     console.log(dataURl);
     // luego guardar en el formulario
-    /* 
+    /*
     this.form.controls.image.setValue(dataURl)
-    
+
     */
-    
   }
 
   /* CAMARA START */
@@ -92,18 +104,9 @@ export default class AgegarRecetaPage implements OnInit {
       promptLabelHeader,
       promptLabelPhoto: 'Seleciona una imagen',
       promptLabelPicture: 'Toma una foto',
-
     });
   }
   /* CAMARA END */
-
-  get ingredientes() {
-    return this.recipeForm.get('ingredientes') as FormArray;
-  }
-
-  get preparacion() {
-    return this.recipeForm.get('preparacion') as FormArray;
-  }
 
   addIngrediente() {
     this.ingredientes.push(this.fb.control(''));
@@ -113,9 +116,13 @@ export default class AgegarRecetaPage implements OnInit {
     this.preparacion.push(this.fb.control(''));
   }
 
-
-  isModalOpen = false;
   capturedImage: string | undefined;
+
+  handleCapture(imageDataUrl: string) {
+    this.capturedImages.push(imageDataUrl);
+    this.imagenes.push(this.fb.control(imageDataUrl));
+    this.closeModal();
+  }
 
   openModal() {
     this.isModalOpen = true;
@@ -124,9 +131,12 @@ export default class AgegarRecetaPage implements OnInit {
   closeModal() {
     this.isModalOpen = false;
   }
-
-  handleCapture(imageDataUrl: string) {
-    this.capturedImage = imageDataUrl;
-    this.closeModal();
+  onSubmit() {
+    if (this.recipeForm.valid) {
+      console.log(this.recipeForm.value);
+      // Aquí puedes agregar la lógica para subir a Firestore
+    } else {
+      console.log('Formulario inválido');
+    }
   }
 }
