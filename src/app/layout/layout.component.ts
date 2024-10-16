@@ -53,9 +53,9 @@ import { AuthStateService } from '../shared/auth-state/auth-state.service';
 })
 export default class LayoutComponent implements OnInit {
 
- 
+
   constructor() {
-    
+
   }
 
   ngOnInit(): void {

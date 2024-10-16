@@ -135,9 +135,32 @@ export default class LoginPage implements OnInit {
       this._router.navigateByUrl('/pages/home');
       this.isLoadingGoogleBtn = false;
     } catch (error) {
-      this._toastService.getToast('Ocurrio un error', 'top', 'danger');
+      this._toastService.getToast('Ocurrio un error', 'middle', 'danger');
       console.log(error);
       this.isLoadingGoogleBtn = false;
     }
   }
+
+
+  // async submitWithGoogle() {
+  //   this.isLoadingGoogleBtn = true;
+  //   try {
+  //     console.log('Iniciando proceso de login con Google');
+  //     const user = await this._authService.signInWithGoogle();
+  //     console.log('Usuario autenticado:', user);
+
+  //     if (user) {
+  //       this._toastService.getToast('Hola nuevamente', 'top', 'success');
+  //       console.log('Navegando a la página de inicio');
+  //       await this._router.navigateByUrl('/pages/home');
+  //     } else {
+  //       throw new Error('No se recibió información del usuario');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error en el proceso de login:', error);
+  //     this._toastService.getToast('Ocurrió un error', 'middle', 'danger');
+  //   } finally {
+  //     this.isLoadingGoogleBtn = false;
+  //   }
+  // }
 }

@@ -8,6 +8,8 @@ import {
 } from '@angular/fire/auth';
 import { doc, Firestore, getDoc, setDoc } from '@angular/fire/firestore';
 import { AuthStoreService } from 'src/app/shared/auth-state/auht-store.service';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
+import { Platform } from '@ionic/angular';
 
 export interface User {
   nombre: string;
@@ -23,8 +25,14 @@ export class AuthService {
   private _auth = inject(Auth);
   private _firestore = inject(Firestore);
   private _authStore = inject(AuthStoreService);
+  private _platform = inject(Platform)
 
-  constructor() {}
+  constructor() {
+
+    if (this._platform.is('capacitor')) {
+      GoogleAuth.initialize();
+    }
+  }
 
   async registerService(user: User) {
     try {
@@ -96,4 +104,24 @@ export class AuthService {
 
     return www;
   }
+
+  // async signInWithGoogle() {
+  //   try {
+  //     const user = await GoogleAuth.signIn();
+
+  //     // user.i
+
+  //     const allData = {
+  //       nombre: user.name,
+  //       rol: 'user',
+  //       email: user.email,
+  //       photoURL: user.imageUrl,
+  //     };
+  //     this._authStore.setUserData(allData);
+  //     return user;
+  //   } catch (error) {
+  //     console.error('Error en la autenticación de Google', error);
+  //     throw error;
+  //   }
+  // }
 }
